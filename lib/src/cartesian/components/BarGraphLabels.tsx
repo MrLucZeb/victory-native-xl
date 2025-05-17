@@ -7,6 +7,7 @@ export type BarLabelConfig = {
   position: "top" | "bottom" | "left" | "right";
   font: SkFont | null;
   color?: Color;
+  format?: (text: string) => string;
 };
 
 type BarGraphLabelProps = {
@@ -25,11 +26,13 @@ export const BarGraphLabels = ({
   barWidth = 0,
   options,
 }: BarGraphLabelProps) => {
-  const { position, font, color } = options;
+  const { position, font, color, format } = options;
 
   // Loop over the data points and position each label
-  return points.map(({ x, y = 0, yValue }) => {
-    const yText = yValue?.toString() ?? "";
+  return points.map(({ x, y = 0, yValue }) =>
+  {
+    let yText = yValue?.toString() ?? "";
+    yText = format ? format(yText) : yText;
     const labelWidth = getFontGlyphWidth(yText, font);
 
     let xOffset;
